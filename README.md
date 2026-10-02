@@ -1,81 +1,115 @@
 # cetar
 
-A physics-based whip overlay for Windows. Hold the middle mouse button, swing, and crack a whip over any window on screen — terminals included.
+Pecut berbasis fisika untuk Windows. Tahan tombol tengah mouse (roller), ayunkan, dan pecut jendela apa pun di layar, termasuk terminal.
 
-*Cetar* is the Indonesian onomatopoeia for the sound of a whip crack.
+> **English:** a physics-based whip overlay for Windows. Install with `pip install git+https://github.com/nothinx/cetar`, run `cetar --lang en`, hold the middle mouse button and swing. Quit with `Ctrl+Shift+Q`.
 
-## Features
+## Fitur
 
-- **Works everywhere.** A transparent, click-through, always-on-top overlay spans every connected monitor, so the whip appears on top of any application.
-- **Real whip motion.** While you swing, the lash trails behind the handle. When your hand stops, it rolls out from handle to tip, reaches full extension, and cracks. Then it recoils.
-- **Directional.** The whip cracks in the direction you swung. Pulling your hand back after a crack is recognised as a wind-up and ignored.
-- **Cartoon impact.** Each crack spawns a jagged starburst with onomatopoeia, impact lines, orbiting dizzy stars and a speech bubble, plus a synthesized crack sound.
-- **Window shake.** The window under the tip shakes briefly when hit.
-- **Zero dependencies.** Python standard library only (`tkinter`, `ctypes`, `winsound`).
+- **Tampil di mana saja.** Lapisan transparan yang tembus klik dan selalu di atas menutupi semua monitor, jadi pecut muncul di atas aplikasi apa pun.
+- **Gerakan pecut sungguhan.** Saat diayun, tali terseret di belakang gagang. Saat tangan berhenti, tali menggulung dari gagang ke ujung, lurus penuh, lalu berbunyi *cetar*, kemudian memantul balik.
+- **Mengikuti arah.** Pecutan keluar searah ayunan. Tarikan balik tangan setelah pecutan dikenali sebagai ancang-ancang dan diabaikan.
+- **Efek kartun.** Setiap pecutan memunculkan ledakan bergerigi berisi tulisan, garis benturan, bintang pusing, balon ucapan, dan suara cambuk.
+- **Jendela bergetar.** Jendela yang kena ujung pecut bergetar sebentar.
+- **Dua bahasa.** Teks efek tersedia dalam bahasa Indonesia dan Inggris. Bahasa dipilih otomatis mengikuti bahasa Windows.
+- **Tanpa dependensi.** Hanya memakai pustaka standar Python.
 
-## Requirements
+## Kebutuhan
 
-- Windows 10 or 11
-- Python 3.8+ with Tk (included in the python.org installer)
+- Windows 10 atau 11
+- Python 3.8+ dari [python.org](https://www.python.org/downloads/). Saat instalasi, centang *Add python.exe to PATH*.
 
-## Usage
+## Instalasi
 
 ```powershell
-pythonw cetar.py
+pip install git+https://github.com/nothinx/cetar
 ```
 
-`pythonw` runs it without a console window. Use `python cetar.py` instead to see errors in the console.
+Perintah ini membutuhkan Git. Kalau Git tidak terpasang, gunakan arsip ZIP:
 
-| Action | Input |
+```powershell
+pip install https://github.com/nothinx/cetar/archive/refs/heads/main.zip
+```
+
+Untuk menghapus: `pip uninstall cetar`.
+
+## Pemakaian
+
+```powershell
+cetar
+```
+
+Program berjalan tanpa jendela konsol. Tanpa instalasi, bisa juga langsung dengan `pythonw cetar.py`.
+
+| Aksi | Cara |
 |---|---|
-| Draw the whip | Hold the middle mouse button |
-| Crack | Swing quickly, then stop |
-| Quit | `Ctrl` + `Shift` + `Q` |
+| Memunculkan pecut | Tahan tombol tengah mouse |
+| Memecut | Ayunkan dengan cepat, lalu berhenti |
+| Keluar | `Ctrl` + `Shift` + `Q` |
 
-## Configuration
+### Bahasa
 
-Tuning constants live at the top of `cetar.py`:
+Bahasa teks efek mengikuti bahasa tampilan Windows: Indonesia untuk Windows berbahasa Indonesia, Inggris untuk lainnya. Untuk memilih sendiri:
 
-| Constant | Default | Effect |
+```powershell
+cetar --lang id
+cetar --lang en
+```
+
+Untuk menambah bahasa, tambahkan satu entri di `TEXTS` dalam `cetar.py`. Isinya `words` (tulisan di ledakan) dan `phrases` (isi balon ucapan).
+
+## Pengaturan
+
+Angka pengaturan ada di bagian atas `cetar.py`:
+
+| Konstanta | Bawaan | Fungsi |
 |---|---|---|
-| `N`, `SEG` | `38`, `13` | Number of segments and segment length (px). The first `H` segments form the handle. |
-| `H` | `6` | Handle length in segments |
-| `MAX_TILT` | `0.5` | Maximum handle tilt (radians) |
-| `GRAV`, `DAMP` | `0.6`, `0.92` | Gravity and velocity damping of the resting lash |
-| `HAND_SPEED` | `18` | Hand speed (px per step) that counts as a swing. Lower it if cracking takes too much effort. |
-| `LASH_FRAMES` | `7` | Duration of the roll-out before the crack (steps of 1/60 s). Lower means snappier. |
-| `LASH_WAVE` | `0.35` | Width of the travelling roll-out wave along the lash |
-| `RETURN_STEPS` | `40` | Window after a crack in which an opposite-direction swing counts as a wind-up |
-| `RECOIL` | `18` | Strength of the tip's recoil after the crack |
+| `N`, `SEG` | `38`, `13` | Jumlah ruas dan panjang tiap ruas (px). `H` ruas pertama menjadi gagang. |
+| `H` | `6` | Panjang gagang (dalam ruas) |
+| `MAX_TILT` | `0.5` | Kemiringan gagang maksimal (radian) |
+| `GRAV`, `DAMP` | `0.6`, `0.92` | Gravitasi dan redaman tali saat diam |
+| `HAND_SPEED` | `18` | Kecepatan tangan (px per langkah) yang dihitung sebagai ayunan. Turunkan kalau memecut terasa berat. |
+| `LASH_FRAMES` | `7` | Lama tali menggulung sebelum *cetar* (langkah 1/60 detik). Makin kecil makin tajam. |
+| `LASH_WAVE` | `0.35` | Lebar gelombang gulungan di sepanjang tali |
+| `RETURN_STEPS` | `40` | Jeda setelah pecutan; ayunan berlawanan arah dalam jeda ini dianggap ancang-ancang |
+| `RECOIL` | `18` | Kuat pantulan balik ujung tali setelah *cetar* |
 
-## How it works
+## Cara kerja
 
-- **Overlay.** A borderless Tk window covers the virtual desktop. Its background is a colour key made transparent with `-transparentcolor`. The extended styles `WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE` make it click-through and keep it out of the taskbar.
-- **Input.** The cursor and middle button are polled with `GetCursorPos` and `GetAsyncKeyState`. No global hooks are installed.
-- **Timing.** Simulation runs at a fixed 60 Hz timestep independent of Tk's timer resolution. Cursor positions are interpolated between steps.
-- **Resting lash.** The lash uses Verlet integration with follow-the-leader length constraints and velocity correction ([Müller et al., 2012](https://matthias-research.github.io/pages/publications/FTLHairFur.pdf)). Each segment keeps its exact length without the constraint injecting energy.
-- **Crack.** Swing direction is accumulated while hand speed is above `HAND_SPEED`. When the hand decelerates, segment angles are blended toward the swing direction by a smoothstep wave that travels from handle to tip, rotating over the top. The crack fires at full extension.
-- **Window shake.** `WindowFromPoint` locates the top-level window under the tip, and `SetWindowPos` offsets it through a short decaying sequence.
+- **Lapisan layar.** Jendela Tk tanpa bingkai menutupi seluruh desktop virtual. Latarnya warna kunci yang dibuat transparan dengan `-transparentcolor`. Gaya `WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE` membuatnya tembus klik dan tidak muncul di taskbar.
+- **Input.** Posisi kursor dan tombol tengah dibaca dengan `GetCursorPos` dan `GetAsyncKeyState`. Tidak ada hook global yang dipasang.
+- **Waktu.** Simulasi berjalan dengan langkah tetap 60 Hz, tidak bergantung pada ketepatan timer Tk. Posisi kursor diinterpolasi di antara langkah.
+- **Tali saat diam.** Integrasi Verlet dengan batasan panjang *follow-the-leader* dan koreksi kecepatan ([Müller dkk., 2012](https://matthias-research.github.io/pages/publications/FTLHairFur.pdf)). Panjang tali tetap tanpa ada tenaga palsu yang membuatnya menggeliat.
+- **Pecutan.** Arah ayunan dikumpulkan selama tangan bergerak di atas `HAND_SPEED`. Saat tangan melambat, sudut setiap ruas dibelokkan ke arah ayunan oleh gelombang *smoothstep* yang berjalan dari gagang ke ujung, berputar lewat atas. Bunyi *cetar* terjadi saat tali lurus penuh.
+- **Jendela bergetar.** `WindowFromPoint` mencari jendela di bawah ujung pecut, lalu `SetWindowPos` menggesernya dalam urutan singkat yang meredam, dan jendela kembali ke posisi semula.
 
-## Testing
+## Keamanan dan privasi
+
+- Tidak ada akses jaringan dan tidak ada data yang dikirim ke mana pun.
+- Keyboard tidak direkam. Program hanya mengecek tombol tengah mouse dan kombinasi `Ctrl+Shift+Q`.
+- Tidak membutuhkan hak administrator dan tidak mengubah pengaturan sistem.
+- Satu-satunya file yang ditulis adalah `cetar_crack.wav` di folder temp, yaitu suara cambuk yang dibuat saat program dijalankan.
+
+## Pengujian
 
 ```powershell
 python test_cetar.py
 ```
 
-These are headless physics checks, with no window and no mouse. They verify that:
+Pengujian berjalan tanpa jendela dan tanpa mouse. Yang diperiksa:
 
-- a fast swing produces exactly one crack, after the hand stops, in the swing direction;
-- a slow swing produces none;
-- the lash length is preserved and the lash comes to rest;
-- a right–left–right sequence yields two right-hand cracks.
+- ayunan cepat menghasilkan tepat satu pecutan, setelah tangan berhenti, searah ayunan;
+- ayunan pelan tidak menghasilkan pecutan;
+- panjang tali tetap dan tali kembali diam;
+- urutan kanan–kiri–kanan menghasilkan dua pecutan ke kanan;
+- setiap bahasa memiliki teks.
 
-## Limitations
+## Batasan
 
-- Maximized windows are not shaken.
-- The middle click still reaches the application underneath. In browsers, for example, this can trigger autoscroll.
-- Windows running with higher privileges than the overlay (e.g. an elevated terminal) cannot be moved.
+- Jendela yang sedang maximize tidak digetarkan.
+- Klik tengah tetap diteruskan ke aplikasi di bawahnya. Di browser, misalnya, ini bisa memicu autoscroll.
+- Jendela yang berjalan dengan hak lebih tinggi (misalnya terminal administrator) tidak bisa digeser.
 
-## License
+## Lisensi
 
 [MIT](LICENSE)

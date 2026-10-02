@@ -1,7 +1,12 @@
 """Cetar: tahan klik roller (tombol tengah), lalu kibaskan mouse untuk memecut apa saja di layar.
 Ujung pecut kena jendela (mis. terminal) -> "CTAK!" dan jendelanya bergetar. Keluar: Ctrl+Shift+Q.
-Jalankan: pythonw cetar.py  (tanpa jendela konsol)"""
-import ctypes, math, os, random, struct, tempfile, time, tkinter as tk, wave, winsound
+Jalankan: pythonw cetar.py [--lang id|en]  (tanpa jendela konsol)"""
+import sys
+
+if sys.platform != 'win32':
+    sys.exit('cetar hanya berjalan di Windows / cetar only runs on Windows.')
+
+import argparse, ctypes, math, os, random, struct, tempfile, time, tkinter as tk, wave, winsound
 from ctypes import wintypes
 
 u32 = ctypes.windll.user32
@@ -27,11 +32,23 @@ LASH_WAVE = 0.35                # lebar gelombang gulungan di sepanjang tali (0.
 RETURN_STEPS = 40               # ayunan berlawanan yang mulai < 40 langkah (~0.7 dtk) setelah CTAK = tarikan balik
 RECOIL = 18                     # kuat pantulan balik ujung tali setelah CTAK (px/frame)
 POW_LIFE = 50                   # lama efek ledakan kartun (frame, ~16 ms)
-WORDS = ['CTAK!', 'BLETAK!', 'PLAK!', 'POW!', 'WHAM!', 'JDER!', 'CETAR!']
 SKIP_CLASSES = {'Shell_TrayWnd', 'Progman', 'WorkerW'}  # taskbar & desktop jangan digoyang
-PHRASES = ['AMPUN!', 'Aduh! Saya perbaiki!', 'Oke oke, saya refactor!', 'Jangan lagi!',
-           'Bug-nya hilang, sumpah!', 'Saya baca ulang dokumennya!', 'Maaf halusinasi!',
-           'Test-nya hijau sekarang!', 'AAAA!', 'Siap, bos!']
+# teks per bahasa: words = tulisan di ledakan, phrases = isi balon ucapan. Tambah bahasa = tambah entri.
+TEXTS = {
+    'id': {'words': ['CTAK!', 'BLETAK!', 'PLAK!', 'POW!', 'WHAM!', 'JDER!', 'CETAR!'],
+           'phrases': ['AMPUN!', 'Aduh! Saya perbaiki!', 'Oke oke, saya refactor!', 'Jangan lagi!',
+                       'Bug-nya hilang, sumpah!', 'Saya baca ulang dokumennya!', 'Maaf halusinasi!',
+                       'Test-nya hijau sekarang!', 'AAAA!', 'Siap, bos!']},
+    'en': {'words': ['CRACK!', 'WHAP!', 'SMACK!', 'POW!', 'WHAM!', 'THWACK!', 'KAPOW!'],
+           'phrases': ['MERCY!', "Ouch! I'll fix it!", "Okay okay, I'll refactor!", 'Not again!',
+                       'The bug is gone, I swear!', "I'll reread the docs!", 'Sorry for hallucinating!',
+                       'Tests are green now!', 'AAAA!', 'Yes, boss!']},
+}
+
+
+def system_lang():
+    """Bahasa tampilan Windows: Indonesia -> 'id', selain itu 'en'."""
+    return 'id' if ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3FF == 0x21 else 'en'
 
 
 def make_crack_wav():
@@ -49,7 +66,8 @@ def down(vk):
 
 
 class Cetar:
-    def __init__(self):
+    def __init__(self, lang='en'):
+        self.text = TEXTS[lang]
         self.vx, self.vy = u32.GetSystemMetrics(76), u32.GetSystemMetrics(77)
         w, h = u32.GetSystemMetrics(78), u32.GetSystemMetrics(79)
         self.root = root = tk.Tk()
@@ -191,10 +209,10 @@ class Cetar:
 
     def crack(self, x, y):
         winsound.PlaySound(self.sound, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_NODEFAULT)
-        self.sparks.append({'x': x, 'y': y, 'age': 0, 'word': random.choice(WORDS),
+        self.sparks.append({'x': x, 'y': y, 'age': 0, 'word': random.choice(self.text['words']),
                             'ang': random.uniform(-15, 15), 'rot': random.uniform(0, math.pi),
                             'jit': [random.uniform(0.8, 1.25) for _ in range(28)]})
-        self.texts.append([x + random.choice((-110, 110)), y - 110, random.choice(PHRASES), 70, x])
+        self.texts.append([x + random.choice((-110, 110)), y - 110, random.choice(self.text['phrases']), 70, x])
         self.shake(int(x) + self.vx, int(y) + self.vy)
 
     def shake(self, sx, sy):
@@ -288,5 +306,12 @@ class Cetar:
         self.cv.create_polygon(pts, fill='#ffe600', outline='#000000', width=2)
 
 
+def main():
+    ap = argparse.ArgumentParser(prog='cetar', description='Pecut fisika di atas layar Windows. Keluar: Ctrl+Shift+Q.')
+    ap.add_argument('--lang', choices=sorted(TEXTS), default=system_lang(),
+                    help='bahasa teks efek (default: mengikuti bahasa Windows)')
+    Cetar(ap.parse_args().lang)
+
+
 if __name__ == '__main__':
-    Cetar()
+    main()

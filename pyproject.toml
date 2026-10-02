@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cetar"
+version = "1.0.0"
+description = "Physics-based whip overlay for Windows: hold the middle mouse button, swing, and crack a whip over any window."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "wisesa_" }]
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Environment :: Win32 (MS Windows)",
+    "Topic :: Games/Entertainment",
+]
+
+[project.urls]
+Homepage = "https://github.com/nothinx/cetar"
+
+[project.gui-scripts]
+cetar = "cetar:main"
+
+[tool.setuptools]
+py-modules = ["cetar"]

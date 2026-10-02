@@ -55,4 +55,6 @@ if __name__ == '__main__':
     p += [p[-1]] * 15 + ayun(500, 40) + [(820, 500)] * 40
     cr = gerak(p)
     assert len(cr) == 2 and all(x > 820 for _, x, _ in cr), f'pecut berulang salah: {cr}'
+    for lang, text in cetar.TEXTS.items():
+        assert text['words'] and text['phrases'], f'teks bahasa {lang} kosong'
     print('OK')
