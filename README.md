@@ -2,7 +2,9 @@
 
 Pecut berbasis fisika untuk Windows. Tahan tombol tengah mouse (roller), ayunkan, dan pecut jendela apa pun di layar, termasuk terminal.
 
-> **English:** a physics-based whip overlay for Windows. Install with `pip install git+https://github.com/nothinx/cetar`, run `cetar --lang en`, hold the middle mouse button and swing. Quit with `Ctrl+Shift+Q`.
+![Demo cetar: pecut menyambar terminal setelah AI mengaku semua test lulus](assets/demo-id.gif)
+
+> **English:** a physics-based whip overlay for Windows. Download `cetar.exe` from [Releases](https://github.com/nothinx/cetar/releases/latest), or install with `pip install git+https://github.com/nothinx/cetar` and run `cetar --lang en`. Hold the middle mouse button and swing; quit with `Ctrl+Shift+Q`. [English demo](assets/demo-en.gif).
 
 ## Fitur
 
@@ -14,12 +16,20 @@ Pecut berbasis fisika untuk Windows. Tahan tombol tengah mouse (roller), ayunkan
 - **Dua bahasa.** Teks efek tersedia dalam bahasa Indonesia dan Inggris. Bahasa dipilih otomatis mengikuti bahasa Windows.
 - **Tanpa dependensi.** Hanya memakai pustaka standar Python.
 
-## Kebutuhan
-
-- Windows 10 atau 11
-- Python 3.8+ dari [python.org](https://www.python.org/downloads/). Saat instalasi, centang *Add python.exe to PATH*.
-
 ## Instalasi
+
+Butuh Windows 10 atau 11.
+
+### Cara termudah: `cetar.exe`
+
+1. Unduh `cetar.exe` dari halaman [Releases](https://github.com/nothinx/cetar/releases/latest).
+2. Klik dua kali untuk menjalankan. Tidak perlu instalasi dan tidak perlu Python.
+
+Karena file ini belum ditandatangani secara digital, Windows SmartScreen mungkin menampilkan peringatan *"Windows protected your PC"*. Klik **More info → Run anyway**. Kalau ragu, pakai cara lewat Python di bawah: kodenya satu file dan bisa dibaca langsung.
+
+### Lewat Python
+
+Butuh Python 3.8+ dari [python.org](https://www.python.org/downloads/). Saat instalasi, centang *Add python.exe to PATH*.
 
 ```powershell
 pip install git+https://github.com/nothinx/cetar
@@ -39,7 +49,7 @@ Untuk menghapus: `pip uninstall cetar`.
 cetar
 ```
 
-Program berjalan tanpa jendela konsol. Tanpa instalasi, bisa juga langsung dengan `pythonw cetar.py`.
+Program berjalan tanpa jendela konsol. Tanpa instalasi, bisa juga langsung dengan `pythonw cetar.py`. Pengguna `cetar.exe` cukup klik dua kali.
 
 | Aksi | Cara |
 |---|---|
@@ -55,6 +65,8 @@ Bahasa teks efek mengikuti bahasa tampilan Windows: Indonesia untuk Windows berb
 cetar --lang id
 cetar --lang en
 ```
+
+Untuk `cetar.exe`, buat shortcut, lalu tambahkan `--lang en` di kolom *Target* setelah nama file.
 
 Untuk menambah bahasa, tambahkan satu entri di `TEXTS` dalam `cetar.py`. Isinya `words` (tulisan di ledakan) dan `phrases` (isi balon ucapan).
 

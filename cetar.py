@@ -212,7 +212,8 @@ class Cetar:
         self.sparks.append({'x': x, 'y': y, 'age': 0, 'word': random.choice(self.text['words']),
                             'ang': random.uniform(-15, 15), 'rot': random.uniform(0, math.pi),
                             'jit': [random.uniform(0.8, 1.25) for _ in range(28)]})
-        self.texts.append([x + random.choice((-110, 110)), y - 110, random.choice(self.text['phrases']), 70, x])
+        side = -110 if x > self.cv.winfo_width() / 2 else 110  # balon ke arah tengah layar, tidak terpotong
+        self.texts.append([x + side, max(40, y - 110), random.choice(self.text['phrases']), 70, x])
         self.shake(int(x) + self.vx, int(y) + self.vy)
 
     def shake(self, sx, sy):
